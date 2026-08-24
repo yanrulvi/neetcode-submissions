@@ -1,0 +1,31 @@
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        n = len(word)
+        
+        def dfs(i, j, k, seen):
+            if i < 0 or i >= len(board) or j < 0 or j >= len(board[0]):
+                return False
+            
+            if (i, j) in seen or board[i][j] != word[k]:
+                return False
+            
+            if k == n - 1:
+                return True
+            
+            seen.add((i, j))
+            
+            found = (dfs(i - 1, j, k + 1, seen) or
+                     dfs(i + 1, j, k + 1, seen) or
+                     dfs(i, j - 1, k + 1, seen) or
+                     dfs(i, j + 1, k + 1, seen))
+            
+            seen.remove((i, j))
+            
+            return found
+        
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                if dfs(i, j, 0, set()):
+                    return True
+        
+        return False
